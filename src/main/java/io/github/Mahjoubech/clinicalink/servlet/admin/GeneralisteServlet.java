@@ -15,6 +15,7 @@ import java.util.stream.Collectors;
 @WebServlet("/admin/generaliste")
 public class GeneralisteServlet extends HttpServlet {
 
+
     private MedcenServiceInterface medcenService;
    private MedcenDaoInterface medao;
     @Override
