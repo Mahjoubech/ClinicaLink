@@ -1,6 +1,7 @@
 package io.github.Mahjoubech.clinicalink.service;
 
 import io.github.Mahjoubech.clinicalink.dao.MedcenDAO;
+import io.github.Mahjoubech.clinicalink.dao.MedcenDaoInterface;
 import io.github.Mahjoubech.clinicalink.dto.MedcenDTO;
 import io.github.Mahjoubech.clinicalink.entity.Medcen;
 import io.github.Mahjoubech.clinicalink.enums.Role;
@@ -12,7 +13,10 @@ import java.util.stream.Collectors;
 
 public class MedcenService implements MedcenServiceInterface {
 
-    private final MedcenDAO medcenDAO = new MedcenDAO();
+    private  MedcenDaoInterface medcenDAO;
+    public MedcenService(MedcenDaoInterface med) {
+        this.medcenDAO = med;
+    }
 
     @Override
     public boolean emailExiste(String email) {
