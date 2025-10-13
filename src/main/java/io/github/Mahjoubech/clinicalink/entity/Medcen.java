@@ -6,7 +6,7 @@ import jakarta.persistence.*;
 @Entity
 @Table(name = "medcen")
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-public abstract class Medcen {
+public class Medcen {
     @Id
     @Column(length = 50)
     protected String id ;
