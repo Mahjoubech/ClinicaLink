@@ -1,5 +1,6 @@
 package io.github.Mahjoubech.clinicalink.servlet.admin;
 
+import io.github.Mahjoubech.clinicalink.config.AppContext;
 import io.github.Mahjoubech.clinicalink.dao.MedcenDAO;
 import io.github.Mahjoubech.clinicalink.dao.MedcenDaoInterface;
 import io.github.Mahjoubech.clinicalink.entity.Medcen;
@@ -18,11 +19,10 @@ public class GeneralisteServlet extends HttpServlet {
 
 
     private MedcenServiceInterface medcenService;
-   private MedcenDaoInterface medao;
     @Override
     public void init() throws ServletException {
-        this.medao = new MedcenDAO();
-        this.medcenService = new MedcenService(medao);
+        AppContext appContext = (AppContext) getServletContext().getAttribute("appContext");
+        this.medcenService = appContext.getMedcenService();
     }
 
     @Override
