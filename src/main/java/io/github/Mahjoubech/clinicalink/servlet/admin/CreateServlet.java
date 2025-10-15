@@ -1,5 +1,6 @@
 package io.github.Mahjoubech.clinicalink.servlet.admin;
 
+import io.github.Mahjoubech.clinicalink.dao.MedcenDAO;
 import io.github.Mahjoubech.clinicalink.dao.MedcenDaoInterface;
 import io.github.Mahjoubech.clinicalink.dto.MedcenDTO;
 import io.github.Mahjoubech.clinicalink.service.MedcenService;
@@ -20,6 +21,7 @@ public class CreateServlet extends HttpServlet {
     private MedcenDaoInterface medcDao;
     @Override
     public void init() throws ServletException {
+        this.medcDao = new MedcenDAO();
         this.medcinService = new MedcenService(medcDao); // Initialize here
         System.out.println("✅ CreateServlet initialized successfully!");
     }

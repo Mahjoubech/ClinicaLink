@@ -1,4 +1,4 @@
-package io.github.Mahjoubech.clinicalink.servlet;
+package io.github.Mahjoubech.clinicalink.servlet.auth;
 
 import io.github.Mahjoubech.clinicalink.dao.MedcenDaoInterface;
 import io.github.Mahjoubech.clinicalink.entity.Medcen;

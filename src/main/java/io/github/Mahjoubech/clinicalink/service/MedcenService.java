@@ -13,9 +13,10 @@ import java.util.stream.Collectors;
 
 public class MedcenService implements MedcenServiceInterface {
 
-    private  MedcenDaoInterface medcenDAO;
-    public MedcenService(MedcenDaoInterface med) {
-        this.medcenDAO = med;
+    private MedcenDaoInterface medcenDAO;
+
+    public MedcenService(MedcenDaoInterface medcenDao) {
+        this.medcenDAO = medcenDao;
     }
 
     @Override

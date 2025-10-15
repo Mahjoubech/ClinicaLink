@@ -1,5 +1,6 @@
 package io.github.Mahjoubech.clinicalink.servlet.admin;
 
+import io.github.Mahjoubech.clinicalink.dao.MedcenDAO;
 import io.github.Mahjoubech.clinicalink.dao.MedcenDaoInterface;
 import io.github.Mahjoubech.clinicalink.entity.Medcen;
 import io.github.Mahjoubech.clinicalink.enums.Role;
@@ -20,6 +21,7 @@ public class InfirmierServlet extends HttpServlet {
 
     @Override
     public void init() throws ServletException {
+        this.medcenDAO = new MedcenDAO();
         this.medcenService = new MedcenService(medcenDAO);
     }
 

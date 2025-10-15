@@ -1,4 +1,4 @@
-package io.github.Mahjoubech.clinicalink.servlet;
+package io.github.Mahjoubech.clinicalink.servlet.auth;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
