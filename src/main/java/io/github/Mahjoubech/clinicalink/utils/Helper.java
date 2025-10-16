@@ -16,7 +16,10 @@ public class Helper {
         String uuidPart = UUID.randomUUID().toString().replace("-", "").substring(0, 8);
         return "SPE-" + uuidPart.toUpperCase();
     }
-
+    public static String generateVitalsingeId(){
+        String uuidPart = UUID.randomUUID().toString().replace("-", "").substring(0, 6);
+        return "VLS-" + uuidPart.toUpperCase();
+    }
     // Generate consultation code
     public static String generateConsultationCode() {
         String datePart = java.time.LocalDate.now().toString().replace("-", "");

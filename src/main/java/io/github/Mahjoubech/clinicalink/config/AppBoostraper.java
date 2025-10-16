@@ -2,10 +2,12 @@ package io.github.Mahjoubech.clinicalink.config;
 
 import io.github.Mahjoubech.clinicalink.dao.MedcenDAO;
 import io.github.Mahjoubech.clinicalink.dao.PatientDAO;
+import io.github.Mahjoubech.clinicalink.dao.RenderVousDAO;
 import io.github.Mahjoubech.clinicalink.entity.Medcen;
 import io.github.Mahjoubech.clinicalink.enums.Role;
 import io.github.Mahjoubech.clinicalink.service.MedcenService;
 import io.github.Mahjoubech.clinicalink.service.PatientService;
+import io.github.Mahjoubech.clinicalink.service.RenderVousService;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.EntityTransaction;
@@ -25,58 +27,22 @@ public class AppBoostraper  implements ServletContextListener {
     public void contextInitialized(ServletContextEvent sce) {
         // 1️⃣ Get ServletContext
         ServletContext ctx = sce.getServletContext();
+
         EntityManagerFactory emf = Persistence.createEntityManagerFactory("clinicalink");
         MedcenDAO medcenDAO = new MedcenDAO(emf);
-        PatientDAO patientDAO = new PatientDAO();
-
+        PatientDAO patientDAO = new PatientDAO(emf);
+        RenderVousDAO rendezVousDAO = new RenderVousDAO(emf);
         MedcenService medcenService = new MedcenService(medcenDAO);
-            PatientService patientService = new PatientService();
-
-        // 4️⃣ Create and store AppContext
-            AppContext appContext = new AppContext(emf, medcenService, patientService);
+        PatientService patientService = new PatientService(patientDAO);
+        RenderVousService renderVousService = new RenderVousService(rendezVousDAO , patientDAO,medcenDAO);
+            AppContext appContext = new AppContext(emf, medcenService, patientService , renderVousService);
         ctx.setAttribute("appContext", appContext);
 
-        // 5️⃣ Seed initial data (optional)
-        seed(emf);
     }
 
     @Override
     public void contextDestroyed(ServletContextEvent sce) {
         AppContext appContext = (AppContext) sce.getServletContext().getAttribute("appContext");
         if (appContext != null) appContext.close();
-    }
-
-    private void seed(EntityManagerFactory emf) {
-        EntityManager em = emf.createEntityManager();
-        EntityTransaction tx = em.getTransaction();
-
-        try {
-            tx.begin();
-
-            // Check if admin already exists
-            long count = (long) em.createQuery("SELECT COUNT(m) FROM Medcen m WHERE m.role = :role")
-                    .setParameter("role", Role.INFIRMER)
-                    .getSingleResult();
-
-            if (count == 0) {
-                // Create default admin
-                Medcen admin = new Medcen(
-                        "admin-001",
-                        "Administrateur Système",
-                        "admin@clinicalink.ma",
-                        "0612345678",
-                        BCrypt.hashpw("admin123", BCrypt.gensalt()),
-                        Role.INFIRMER
-                );
-                em.persist(admin);
-            }
-
-            tx.commit();
-        } catch (Exception e) {
-            if (tx.isActive()) tx.rollback();
-            e.printStackTrace();
-        } finally {
-            em.close();
-        }
     }
 }

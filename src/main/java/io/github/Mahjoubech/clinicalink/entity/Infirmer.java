@@ -1,8 +1,10 @@
 package io.github.Mahjoubech.clinicalink.entity;
 
 import io.github.Mahjoubech.clinicalink.enums.Role;
-import jakarta.persistence.DiscriminatorValue;
-import jakarta.persistence.Entity;
+import jakarta.persistence.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @DiscriminatorValue("INFIRMER")
