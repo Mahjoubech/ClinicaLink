@@ -71,7 +71,7 @@ public class MedcenDAO implements MedcenDaoInterface {
     }
 
     @Override
-    public Optional<Medcen> findById(Long id) {
+    public Optional<Medcen> findById(String id) {
         EntityManager em = emf.createEntityManager();
         try {
             Medcen medcen = em.find(Medcen.class, id);

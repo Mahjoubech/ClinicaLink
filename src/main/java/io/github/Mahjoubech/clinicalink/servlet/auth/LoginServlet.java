@@ -1,6 +1,6 @@
 package io.github.Mahjoubech.clinicalink.servlet.auth;
 
-import io.github.Mahjoubech.clinicalink.dao.MedcenDaoInterface;
+import io.github.Mahjoubech.clinicalink.config.AppContext;
 import io.github.Mahjoubech.clinicalink.entity.Medcen;
 import io.github.Mahjoubech.clinicalink.enums.Role;
 import io.github.Mahjoubech.clinicalink.service.MedcenService;
@@ -17,55 +17,43 @@ import java.util.Optional;
 @WebServlet("/login")
 public class LoginServlet extends HttpServlet {
     private MedcenService medcinService;
-    private MedcenDaoInterface medcDao;
 
     @Override
     public void init() throws ServletException {
-        this.medcinService = new MedcenService(medcDao);
-        System.out.println("✅ LoginServlet initialized successfully!");
+        AppContext appContext = (AppContext) getServletContext().getAttribute("appContext");
+        this.medcinService = appContext.getMedcenService();
     }
-
+   @Override
+   protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+         req.getRequestDispatcher("login.jsp").forward(req, resp);
+   }
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        handleLogin(request, response);
+    }
+
+    private void handleLogin(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
         String email = request.getParameter("email");
         String password = request.getParameter("password");
-        String adminName = "Admin";
 
-        // 1. Check admin login
-        if (AdminAuth.authenticate(email, password)) {
-            HttpSession session = request.getSession();
-            session.setAttribute("adminName", adminName);
-            session.setAttribute("admin", true);
-            session.setAttribute("adminEmail", email);
-            response.sendRedirect(request.getContextPath() + "/admin/dashboard");
-            return;
-        }
-
-        // 2. Check medical staff login
         try {
-            // Find user by email first
+            if (AdminAuth.authenticate(email, password)) {
+                HttpSession session = request.getSession();
+                session.setAttribute("currentUser", createAdminUser(email));
+                response.sendRedirect(request.getContextPath() + "/admin/");
+                return;
+            }
             Optional<Medcen> medcenOpt = medcinService.findByEmail(email);
 
-            if (medcenOpt.isPresent()) {
-                Medcen medcen = medcenOpt.get();
-
-                // Check password using authenticate method
-                if (medcinService.authenticate(email, password)) {
-                    HttpSession session = request.getSession();
-                    session.setAttribute("user", medcen);
-                    session.setAttribute("userRole", medcen.getRole());
-                    session.setAttribute("userName", medcen.getNomComplet());
-                    session.setAttribute("userEmail", medcen.getEmail());
-
-                    // Redirect based on role
-                    String redirectPath = getRedirectPathByRole(medcen.getRole());
-                    response.sendRedirect(request.getContextPath() + redirectPath);
-                } else {
-                    request.setAttribute("error", "Email ou mot de passe incorrect");
-                    request.getRequestDispatcher("login.jsp").forward(request, response);
-                }
+            if (medcenOpt.isPresent() && medcinService.authenticate(email, password)) {
+                Medcen user = medcenOpt.get();
+                HttpSession session = request.getSession();
+                session.setAttribute("currentUser", user);
+                String redirectPath = "/" + user.getRole().toString().toLowerCase() + "/";
+                response.sendRedirect(request.getContextPath() + redirectPath);
             } else {
                 request.setAttribute("error", "Email ou mot de passe incorrect");
                 request.getRequestDispatcher("login.jsp").forward(request, response);
@@ -79,23 +67,20 @@ public class LoginServlet extends HttpServlet {
     }
 
     /**
-     * Determine redirect path based on user role
+     * Create a mock admin user object for session consistency
      */
-    private String getRedirectPathByRole(Role role) {
-        if (role == null) {
-            return "/login";
-        }
+    private Object createAdminUser(String email) {
+        // You might want to create a proper Admin class for type safety
+        // For now, returning a simple representation
+        return new Object() {
+            public String getRole() { return "ADMIN"; }
+            public String getEmail() { return email; }
+            public String getName() { return "Admin"; }
 
-        switch (role) {
-            case INFIRMER:
-                return "/infirmier/dashboard";
-            case GENERALISTE:
-                return "/generaliste/dashboard";
-            case SPECIALISTE:
-                return "/specialiste/dashboard";
-            default:
-                return "/login";
-        }
+            @Override
+            public String toString() {
+                return "Admin{email='" + email + "'}";
+            }
+        };
     }
-
 }

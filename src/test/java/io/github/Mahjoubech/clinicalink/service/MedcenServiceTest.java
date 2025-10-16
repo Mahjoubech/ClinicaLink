@@ -1,15 +1,12 @@
-package io.github.Mahjoubech.clinicalink;
+package io.github.Mahjoubech.clinicalink.service;
 
 import io.github.Mahjoubech.clinicalink.dao.MedcenDAO;
 import io.github.Mahjoubech.clinicalink.dao.MedcenDaoInterface;
 import io.github.Mahjoubech.clinicalink.dto.MedcenDTO;
 import io.github.Mahjoubech.clinicalink.entity.Medcen;
 import io.github.Mahjoubech.clinicalink.enums.Role;
-import io.github.Mahjoubech.clinicalink.service.MedcenService;
-import io.github.Mahjoubech.clinicalink.service.MedcenServiceInterface;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 
 import java.util.Arrays;
 import java.util.Optional;
@@ -42,14 +39,10 @@ class MedcenServiceTest {
     @Test
     void testRegisterMedcen() {
         MedcenDTO dto = new MedcenDTO("New User", "hh@gmail.com", "+21252633256", "password", Role.INFIRMER);
-
-        // No existing users
         when(medcenDAO.findAll()).thenReturn(Arrays.asList());
 
         boolean result = service.registerMedcen(dto);
         assertTrue(result);
-
-        // Verify DAO.save called once
         verify(medcenDAO, times(1)).save(any(Medcen.class));
     }
 

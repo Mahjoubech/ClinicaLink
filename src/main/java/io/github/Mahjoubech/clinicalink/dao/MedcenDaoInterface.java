@@ -9,7 +9,7 @@ public interface MedcenDaoInterface {
     void save(Medcen med);
     void update(Medcen med);
     void delete(Medcen med);
-    Optional<Medcen> findById(Long id);
+    Optional<Medcen> findById(String id);
     Optional<Medcen> findByEmail(String email);
     List<Medcen> findAll();
     List<Medcen> findByRole(Role role);
