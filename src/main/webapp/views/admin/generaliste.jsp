@@ -2,7 +2,7 @@
 <%@ page import="java.util.List, io.github.Mahjoubech.clinicalink.entity.Medcen, io.github.Mahjoubech.clinicalink.enums.Role" %>
 <%
     HttpSession sessionCheck = request.getSession(false);
-    if (sessionCheck == null || sessionCheck.getAttribute("admin") == null) {
+    if (sessionCheck == null || sessionCheck.getAttribute("currentUser") == null) {
         response.sendRedirect(request.getContextPath() + "/login.jsp");
         return;
     }
