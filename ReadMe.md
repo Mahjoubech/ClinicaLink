@@ -78,9 +78,9 @@ Ce projet est basé sur l'écosystème **Jakarta EE (anciennement Java EE)** et 
 ## 🗂️ Documentation et Suivi
 
 ### 📊 Diagramme UML des Classes
-     ![DIAGRAM CLASS Screenshot](docs/diagramClass.png)
+![DIAGRAM CLASS Screenshot](docs/diagramClass.png)
 ### 📋 Suivi de Projet (JIRA/Trello)
-        ![JIRA Screenshot](docs/jira.png)
+![JIRA Screenshot](docs/jira.png)
 -----
 
 ## 📬 Contact
